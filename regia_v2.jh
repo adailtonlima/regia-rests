@@ -1,0 +1,1023 @@
+
+entity ArquivoAnexo {
+	nome String required
+    descricao String
+    filePath String required    
+    extensao String
+    criado ZonedDateTime
+    // ManyToOne:
+    //entrada
+    //certidao
+    //certificado
+    //saida
+    //licenca
+    //patrimonio
+    //empresa
+    //imposto
+    //template
+    //conteudo
+    //atividade
+    //empresa
+    //funcionario
+    //cooperado
+    //instanciaImpostoNaEmpresa
+}
+
+ entity Ata {
+    titulo String required
+    texto String maxlength(10000)
+    dataCriacao ZonedDateTime
+    dataInicio ZonedDateTime
+    latitude Double
+    longitude Double
+    // ManyToOne: reuniao
+    
+    //empresa
+}
+
+entity Atividade {
+	nome String required
+    descricao String
+    status StatusAtividade
+    previsaoInicio LocalDate
+    execucaoInicio ZonedDateTime
+    previsaoFim LocalDate
+    execucaoFim ZonedDateTime
+    previsaoHoras Double
+    execucaoHoras Double
+    criado ZonedDateTime
+    //ManyToMany atividades
+    //ManyToMany alocados Pessoa
+    //ManyToOne projeto
+    
+    //OneToMany LinkAnexo
+    //OneToMany precedentes 
+}
+
+enum StatusAtividade {
+	CRIADA, ANDAMENTO, PAUSADA, CANCELADA, FINALIZADA
+}
+
+entity Aviso {
+	titulo String required
+    descricao String
+    ativo Boolean
+    criado ZonedDateTime	
+    // ManyToMany categoria
+    // ManyToMany empresa
+    // ManyToMany comunidade
+    // ManyToMany estado
+    // ManyToMany municipio
+    // ManyToMany funcionario
+    // ManyToMany cooperado
+    
+}
+
+entity Banco {
+	codigo Integer required
+    nome String required
+    site String    
+    contato String
+    urlImagem String
+}
+
+entity Banner {
+    titulo String required
+    descricao String
+    linkExterno String    
+    linkVideo String  
+    imagemUrl String     
+    rascunho Boolean
+    enviarPush Boolean
+    inicioTimestamp ZonedDateTime
+    fimTimestamp ZonedDateTime
+    criado ZonedDateTime  required
+    ativo Boolean  
+    disparadoPush Boolean
+    disparadoPushTimestamp ZonedDateTime 
+    // ManyToMany CategoriaEmpresa
+}
+
+entity CategoriaConteudo {
+	nome String required
+    urlImagem String
+	ativo Boolean
+	criado ZonedDateTime
+    // ManyToMany CategoriaEmpresa
+    // ManyToMany Conteudo
+}
+
+// Serve para definir no cadastro as empresas e depois vincular conteudos e avisos
+// por determinada categoria
+entity CategoriaEmpresa {
+	nome String required
+    imagemUrl String
+	ativo Boolean
+	criado ZonedDateTime
+    // ManyToMany Template
+    // ManyToMany CategoriaConteudo
+    // ManyToMany Banner
+    // ManyToMany Empresa
+    // ManyToMany Aviso
+}
+
+entity CategoriaProduto {
+	codigo String
+	nome String required
+    descricao String 
+    urlImagem String
+	criadaTimestamp ZonedDateTime    
+    ativo Boolean
+}
+
+entity CategoriaTemplate{
+	nome String required
+    descricao String
+    imagemUrl String
+    ativo Boolean
+	criado ZonedDateTime
+    // ManyToMany Template
+}
+
+entity CentroCusto {
+	nome String required
+    descricao String
+    iconeUrl String
+    criado ZonedDateTime required
+    sistema Boolean
+    ativo Boolean
+    // ManyToOne Empresa
+}
+
+entity Certidao {
+	nome String required
+    descricao String
+    esfera Esfera required
+    periodicidade Periodicidade
+	emissao LocalDate
+    validade LocalDate
+    // ManyToOne Empresa
+    // ManyToOne Municipio
+    // ManyToOne Estado
+}
+
+entity Certificado {
+	nome String required
+    descricao String
+    esfera Esfera required
+    periodicidade Periodicidade
+    emissao LocalDate
+	validade LocalDate
+    // ManyToOne Empresa
+    // ManyToOne Municipio
+    // ManyToOne Estado
+}
+
+entity ClickBanner{
+	plataforma Plataforma
+    agente String
+	momento ZonedDateTime required
+    latitude Double
+    longitude Double
+    // ManyToOne Banner
+    // ManyToOne Pessoa
+}
+
+enum Plataforma {
+	WEB, IOS, ANDROID
+}
+
+entity Comentario {
+	texto String required
+    hora ZonedDateTime required
+    // ManyToOne Atividade
+    // ManyToOne Ata
+    // ManyToOne Reuniao
+    // ManyToOne Pessoa
+}
+
+entity CompraProduto {
+    valorUnitario Double
+    valorTotal Double
+    quantidade Double
+    medidaQuantidade MedidaQuantidade
+	observacoes String
+    // ManyToOne Empresa
+    // ManyToOne CompraProdutos
+}
+
+entity CompraProdutos {
+    nome String
+    arquivoRecibo String
+    valorTotal Double
+    dataCompra LocalDate
+    dataRecebimento LocalDate
+    parcelas Integer
+    observacoes String
+    confirmada Boolean
+    // ManyToOne Projeto
+    // ManyToOne Contrato
+    // ManyToOne Servico
+    // ManyToOne NotaFiscal
+    // ManyToOne Empresa (empresa)
+    // ManyToOne Empresa (fornecedor)
+}
+
+entity CompraServico { 
+    arquivoRecibo String
+    valorTotal Double
+    valorImpostos Double
+    confirmado Boolean
+    quantidade Double
+    dataCompra LocalDate
+    dataRecebimento LocalDate
+    parcelas Integer
+    observacoes String
+    // Empresa fornecedor
+    // Empresa fornecedor
+    // Servico
+    // Contrato
+    // Projeto   
+}
+
+entity Comunidade {
+	nome String required
+    descricao String
+    latitude Double
+    longitude Double
+    // ManyToOne Municipio
+    // ManyToMany Aviso
+}
+
+entity ContaBancaria{
+	tipo TipoContaBancaria
+	agencia String
+    conta String
+    saldoInicial Double
+    criado ZonedDateTime
+    ativo Boolean
+}
+
+enum TipoContaBancaria{
+	CORRENTE, APLICACAO, INVESTIMENTO, POUPANCA
+}
+
+entity Conteudo {
+	titulo String required
+    texto String
+    criado ZonedDateTime
+    ativo Boolean
+}
+
+entity Contrato {
+    numero String
+    descricao String
+    arquivo String
+    inicio LocalDate
+    validade LocalDate
+    criado ZonedDateTime
+    // ManyToOne Empresa
+}
+
+entity ContratoServico {
+	numeroContrato String
+    tipoFaturamento TipoFaturamento
+    diaFaturamento Integer
+    vigenciaInicial LocalDate
+    vigenciaFinal LocalDate    
+    numeroParcelas Integer
+    previsaoFaturamento LocalDate
+    observacoes String
+    aceito Boolean
+    criado LocalDate
+    // ManyToOne Pessoa
+    // ManyToMany Servicos	
+    // ManyToOne Empresa (cliente)
+    // ManyToOne Empresa (fornecedor)
+    // OneToOne NotaFiscal
+}
+
+enum TipoFaturamento{
+	MENSAL, BIMESTRAL, TRIMESTRAL, QUADRIMESTRAL, SEMESTRAL, ANUAL
+}
+
+entity ContratoServicoItem {
+	nomeServico String
+    descricao String
+    precoVenda Double
+    precoPromocional Double
+    fotoPrincipalUrl String
+    codigoCNAE String
+    codigoC116 String
+    codigoNBS String
+    tributacao String
+    tipoServico TipoServico
+    criado ZonedDateTime
+    aliquotaISS Double
+    aliquotaPIS Double
+    aliquotaCOFINS Double
+    aliquotaCSLL Double
+    aliquotaIR Double
+    aliquotaINSS Double
+    quantidade Long
+    // ManyToOne Servico
+    // ManyToOne ContratoServico
+}
+
+entity Cooperado {	
+    ativo Boolean
+    admin Boolean
+    criado ZonedDateTime
+}
+
+entity Empresa {	
+    nome String required
+    razaoSocial String
+    pessoaContato String
+    sigla String
+    cnpj String required
+    fundacao LocalDate
+    email String
+    telefone String    
+    criado ZonedDateTime
+}
+
+entity Endereco {
+	nome String
+	cep String 
+    enderecoResidencial String
+    numero String
+    complemento String
+    perimetro String
+    bairro String
+    cidade String
+    uf String    
+    email String
+    tempoResidencia String    
+    quitada Boolean
+    telefoneResidencial String
+    telefoneResindecialTipo TipoContatoTelefone
+    celular String
+    celularTipo TipoContatoTelefone
+    nomeRecado String 
+    latitude Double
+    longitude Double
+    criado ZonedDateTime
+}
+
+enum TipoContatoTelefone{
+	PROPRIO, FAMILIA, EMPRESA, RECADO
+}
+
+entity Entrada {
+	nome String required
+    observacoes String
+    tipo TipoEntrada // francisco: adicionado
+	valor Double required
+    desconto Double
+    juros Double
+    vencimento LocalDate
+    previsaoRecebimento LocalDate
+    arquivoNotaFiscalUrl String
+    impRetidoISS Double
+    impRetidoPIS Double
+    impRetidoCOFINS Double
+    impRetidoCSLL Double
+    impRetidoIR Double
+    impRetidoINSS Double
+    criado ZonedDateTime required   
+}
+
+// francisco: adicionado enum TIPO DE ENTRADA
+enum TipoEntrada {
+	APORTE, RECEITA, VENDA
+}
+
+entity Estado {
+	nome String required
+    sigla String
+    iconeUrl String
+    latitude Double
+	longitude Double
+}
+
+entity ExtratoConta{
+	conciliado Boolean
+	caminhoArquivo String
+	criado ZonedDateTime
+}
+
+entity FamiliaProduto{
+	nome String required
+    descricao String
+    criado ZonedDateTime required 
+}
+
+entity Funcionario {
+	inicioVinculo LocalDate
+    fimVinculo LocalDate
+    tipoContrato TipoContrato
+    numeroDependentes Integer
+    grauInstrucao GrauInstrucao
+    ativo Boolean
+	codigo String    
+    criado ZonedDateTime  
+}
+
+enum TipoContrato{
+ CLT, PJ, FREELANCER, OUTRO
+}
+
+enum GrauInstrucao {
+	NENHUM, PRIMEIRO_GRAU, SEGUNDO_GRAU, SUPERIOR, POSGRADUACAO
+}
+
+entity Imposto {
+	nome String required
+	esfera Esfera required
+    taxa Double
+    periodicidade Periodicidade
+    criado ZonedDateTime
+    ativo Boolean
+}
+
+entity ImpostoNaEmpresa{
+	inicioVigencia LocalDate
+    finalVigencia LocalDate
+    statusAtual Boolean
+    ultimoValorPago Double
+    // ManyToOne
+    //imposto
+    //empresa
+    //municipio
+    //estado
+}
+
+entity InstanciaImpostoNaEmpresa{
+	vencimento LocalDate
+    valor Double 
+    status Boolean
+    formaPagamento FormaPagamento    
+}
+
+enum FormaPagamento {
+	CARTAO, BOLETO, TRANSFERENCIA, DINHEIRO, CHEQUE, PERMUTA_PRODUTO, PERMUTA_SERVICO
+}
+
+entity Licenca {
+	nome String required
+    descricao String
+    esfera Esfera required
+    periodicidade Periodicidade
+	vencimento LocalDate
+}
+
+enum Esfera {
+	MUNICIPAL, ESTADUAL, FEDERAL, INTERNACIONAL
+}
+
+enum Periodicidade {
+    DIA, MES, ANO, SEMESTRE, BIMESTRE, TRIMESTRE, SEMANA
+}
+
+entity LinkAnexo {
+	nome String required
+    url String required
+    ativo Boolean
+    criado ZonedDateTime    
+}
+
+entity MarcadorTemplate {
+	marcador String
+}
+
+entity MovimentacaoProduto{
+	quantidade Integer
+    medidaPeso MedidaPeso
+    medidaQuantidade MedidaQuantidade
+	hora ZonedDateTime
+    comentario String
+    criado ZonedDateTime required 
+}
+
+enum MedidaQuantidade {
+    CESTO, CARRADA, QUILO, TONELADA, UNIDADE
+}
+
+enum MedidaPeso {
+    CESTO, CARRADA, QUILO, TONELADA, MACOS, ARROBA, CAIXAS, CAIXAS_OVOS, SACA_100KG, SACA_40KG, LITRO, ML
+}
+
+entity Municipio {
+	nome String required
+    sigla String
+    iconeUrl String
+    latitude Double
+	longitude Double
+}
+
+entity NotaFiscal {
+	numero String
+    dataEmissao LocalDate
+    arquivoNotaUrl String
+    responsavel String
+    // projeto
+    // vendedor
+    // empresa
+}
+
+entity Orcamento {
+	titulo String required
+    descricao String
+    previsaoEntrega String
+    informacoesComplementares String
+    formaPagamento String
+    criado LocalDate
+    validade LocalDate
+	aceito Boolean
+    // pessoa responsavel
+    // empresa solicitante
+    // empresa fornecedor
+    // nota fical
+    // atividade
+}
+
+entity OrcamentoProduto {	
+    nomeProduto String required
+    valor Double required
+    data LocalDate
+	validade LocalDate
+    quantidade Double    
+}
+
+entity Patrimonio {
+	nome String required
+    descricao String
+    dataAquisicao LocalDate
+    criado ZonedDateTime    
+    tipo TipoBem
+    ativo Boolean
+}
+
+enum TipoBem {
+	MOVEL, IMOVEL, EQUIPAMENTO
+}
+
+entity PermissaoUsuario {
+	transacao String
+    acao Acao
+    modulo Modulo
+	criado ZonedDateTime required
+    validade ZonedDateTime
+    ativo Boolean    
+}
+
+enum Acao {
+	LISTAR, CADASTRAR, EDITAR, APAGAR
+}
+
+enum Modulo {
+	CONVENIOS, IMPOSTOS, FUNCIONARIOS, 
+    COOPERADOS, ANEXOS, 
+    ATAS, REUNIOES, PROJETOS,
+     ATIVIDADES, ORCAMENTOS, EMPRESAS, 
+     ENTRADAS, 
+     SAIDAS, 
+     PATRIMONIOS
+}
+
+entity Pessoa {
+	nome String required
+    cpf String
+    dataNascimento LocalDate
+    naturalidade String    
+    email String required
+    celular String  
+    foto String
+    fixo String
+    sexo Sexo
+    estadoCivil EstadoCivil  
+    comoConhecido String		  
+	ativo Boolean
+	criado ZonedDateTime required
+    ultimoLogin ZonedDateTime
+    tokenPush String
+}
+
+enum Sexo {
+	M, F
+}
+
+enum EstadoCivil {
+	SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO, MARITAL, OUTROS
+}
+
+entity Produto {
+	nome String
+    descricao String
+    fotoPrincipalUrl String
+    preco Double    
+    precoUnitario Double 
+    precoPromocional Double
+    quantidedeMinima Integer
+    aceitaCartaoExterno Boolean
+    medidaPeso MedidaPeso
+    medidaQuantidade MedidaQuantidade
+    tipo TipoProduto
+    aceitaBoleto Boolean
+    soDinheiro Boolean
+    maximoParcelas Integer
+    entregaGratis Boolean
+    retirarLoja Boolean
+    totalEstoque Integer
+    disponivelLimiteTimestamp ZonedDateTime
+    codigoNCM String
+    codigoEAN String    
+    altura Double
+    largura Double
+    peso Double
+    comprimento Double
+    criado ZonedDateTime required
+    ativo Boolean
+    // familiaproduto
+    // categoriaproduto
+    // empresa 
+    // empresa fornecedor
+    // empresa cliente
+    // produtosistema
+    // cooperado
+}
+
+// francisco: adicionado enum TIPO DE PRODUTO
+enum TipoProduto {
+	PRODUZIDO, ADQUIRIDO, AMBOS
+}
+
+entity ProdutoSistema{
+	nome String required
+    descricao String
+    medidaPesoPadrao MedidaPeso
+    medidaQuantidadePadrao MedidaQuantidade
+    criado ZonedDateTime required      
+}
+
+entity Projeto {
+	nome String
+    descricao String
+    ativo Boolean
+    criado ZonedDateTime
+    prazo LocalDate    
+    // Entradas e Saidas
+    // atividades empresa
+    // conta bancaria e participantes
+}
+
+entity Reuniao {
+	titulo String
+    descricao String
+    responsavel String
+    data ZonedDateTime
+    local String
+    latitude Double
+    longitude Double
+}
+
+entity Saida {
+	nome String required
+    observacoes String
+    tipo TipoSaida  // francisco: adicionado 
+	valor Double required
+    desconto Double
+    juros Double
+    vencimento LocalDate
+    arquivoNotaFiscalUrl String
+    previsaoPagamento LocalDate
+    impRetidoISS Double
+    impRetidoPIS Double
+    impRetidoCOFINS Double
+    impRetidoCSLL Double
+    impRetidoIR Double
+    impRetidoINSS Double
+    criado ZonedDateTime required   
+}
+
+// francisco: adicionado enum TIPO DE SAIDA
+enum TipoSaida {
+	CUSTO, DESPESA, INVESTIMENTO
+}
+
+entity Servico{
+	ativo Boolean
+    nome String
+    descricao String
+    fotoPrincipalUrl String
+    codigoCNAE String
+    codigoLC116 String
+    codigoNBS String
+    tributacao String // TODO: validar o que sao esses tipos de tributacao
+    tipo TipoServico
+    precoVenda Double
+    precoCusto Double
+    precoPromocional Double
+    quantidedeMinima Integer
+    aceitaCartaoExterno Boolean
+    aceitaBoleto Boolean
+    soDinheiro Boolean
+    maximoParcelas Integer
+    criado ZonedDateTime required 
+    aliquotaISS Double
+    aliquotaPIS Double
+    aliquotaCOFINS Double
+    aliquotaCSLL Double
+    aliquotaIR Double
+    aliquotaINSS Double
+}
+
+enum TipoServico {
+ 		PRESTADO, TOMADO, AMBOS
+} 
+
+entity Template {
+	nome String required
+    descricao String    
+    criado ZonedDateTime
+    // arquivo link video anexo
+    // categoria template e categoria empresa
+    // empresa
+}
+
+entity TemplateAta {
+	nome String
+    texto String
+	ativo Boolean
+	criado ZonedDateTime
+}
+
+entity VideoAnexo {
+	nome String required
+    urlYoutube String
+    descricao String
+    filePath String
+    criado ZonedDateTime
+}
+
+
+
+// relacionamentos
+
+relationship ManyToMany {
+
+    Atividade{dependentes(nome)} to Atividade{precedentes(nome)}    
+    Atividade{alocados(nome)} to Pessoa{atividades(nome)}
+    
+    Aviso{categorias(nome)} to CategoriaEmpresa{avisos(titulo)}  
+	Aviso{empresas(nome)} to Empresa{avisos(titulo)}
+    Aviso{comunidades(nome)} to Comunidade{avisos(titulo)}
+    Aviso{estado(nome)} to Estado{avisos(titulo)}
+    Aviso{municipio(nome)} to Municipio{avisos(titulo)}
+    Aviso{funcionarios} to Funcionario{avisos(titulo)}
+    Aviso{cooperados} to Cooperado{avisos(titulo)}
+    
+    Banner{categoriasEmpresas(nome)} to CategoriaEmpresa{banners(titulo)}
+    
+    CategoriaConteudo{categoriasEmpresa(nome)} to CategoriaEmpresa{categoriasConteudos(nome)}
+    CategoriaConteudo{conteudos(titulo)} to Conteudo{categorias(nome)}
+    
+	CategoriaEmpresa{templatesDisponiveis(nome)} to Template{categoriasEmpresa(nome)}
+    CategoriaEmpresa{empresas(nome)} to Empresa{categorias(nome)}
+    
+    CategoriaTemplate{templates(nome)} to Template{categorias(nome)}
+    
+    ContratoServico{servicos} to Servico{fazParteContratos}
+    
+    Cooperado{empresas(nome)} to Empresa{cooperados}
+    Cooperado{produtos} to Produto{cooperados}
+    Cooperado{servicos} to Servico{cooperados}
+    
+    Empresa{fornecedores(nome)} to Empresa{clientes(nome)}  
+    Empresa{impostos(nome)} to Imposto{empresas(nome)}
+    
+    Projeto{participantes(nome)} to Pessoa{projetos(nome)}
+    
+    Reuniao{convidados} to Pessoa{convitesReunioes}	// alterado conforme codigo, ates era Cooperado
+    
+}
+
+relationship OneToOne {
+
+    ContratoServico{notaFiscal(numero)} to NotaFiscal 
+	
+    Entrada{notaFiscal(numero)} to NotaFiscal
+    Entrada{orcamento} to Orcamento // francisco adicionou
+    Entrada{orcamento} to ContratoServico // francisco adicionou
+    
+    MovimentacaoProduto{orcamentoProduto} to OrcamentoProduto // francisco adicionou
+    MovimentacaoProduto{compraProduto} to CompraProduto // francisco adicionou
+    
+    Orcamento {notaFiscal(numero)} to NotaFiscal
+    
+    Pessoa{user(login)} to User
+    
+    Reuniao{endereco} to Endereco
+    
+    Saida{notaFiscal(numero)} to NotaFiscal	
+    
+}
+
+relationship ManyToOne {
+
+    ArquivoAnexo{entrada(nome)} to Entrada
+    ArquivoAnexo{certidao(nome)} to Certidao
+    ArquivoAnexo{certificado(nome)} to Certificado
+    ArquivoAnexo{saida(nome)} to Saida
+    ArquivoAnexo{licenca(nome)} to Licenca
+    ArquivoAnexo{empresa(nome)} to Empresa
+
+	CentroCusto{empresa(nome)} to Empresa // permite que um centro de custo seja personalizado pela empresa logada que cadastrou
+
+	Certidao{empresa(nome)} to Empresa
+    Certidao{municipio(nome)} to Municipio
+    Certidao{estado(nome)} to Estado
+
+	Certificado{empresa(nome)} to Empresa
+    Certificado{municipio(nome)} to Municipio
+    Certificado{estado(nome)} to Estado
+	
+    ClickBanner{banner(titulo)} to Banner
+    ClickBanner{pessoa(nome)} to Pessoa
+    
+	Comentario{atividade(nome)} to Atividade
+    Comentario{ata} to Ata
+    Comentario{reuniao} to Reuniao    
+    Comentario{autor(nome)} to Pessoa  
+    
+    CompraProduto{compraProdutos} to CompraProdutos
+    CompraProduto{fornecedor(nome)} to Empresa
+	CompraProduto{produto} to Produto
+    
+	CompraProdutos{notaFiscal} to NotaFiscal 
+	CompraProdutos{projeto} to Projeto
+	CompraProdutos{contrato} to Contrato
+  
+	CompraServico{projeto} to Projeto
+    CompraServico{contrato} to Contrato
+    CompraServico{servico} to Servico
+    CompraServico{notaFiscal} to NotaFiscal   
+    
+    Comunidade{municipio(nome)} to Municipio
+    
+    ContaBancaria{banco(nome)} to Banco
+    ContaBancaria{empresa(nome)} to Empresa
+
+ 	Contrato{empresa(nome)} to Empresa
+	
+    ContratoServico{vendedor} to Funcionario
+    
+    ContratoServicoItem{Servico} to Servico
+    ContratoServicoItem{ContratoServico} to ContratoServico
+
+	Cooperado{empresaAdministrada} to Empresa
+
+	Endereco{empresa(nome)} to Empresa
+    Endereco{cooperado} to Pessoa
+    Endereco{municipio(nome)} to Municipio
+    Endereco{comunidade(nome)} to Comunidade
+	
+    Entrada{categoria(nome)} to CentroCusto
+	Entrada{conta(conta)} to ContaBancaria
+
+	ExtratoConta{conta} to ContaBancaria
+    
+    FamiliaProduto{empresa(nome)} to Empresa // francisco adicionou
+    
+    ImpostoNaEmpresa{imposto(nome)} to Imposto
+	ImpostoNaEmpresa{empresa(nome)} to Empresa
+    ImpostoNaEmpresa{municipio(nome)} to Municipio
+    ImpostoNaEmpresa{estado(nome)} to Estado
+    
+	InstanciaImpostoNaEmpresa{imposto} to ImpostoNaEmpresa
+	InstanciaImpostoNaEmpresa{empresa(nome)} to Empresa    
+	
+    Licenca{empresa(nome)} to Empresa 
+    Licenca{municipio(nome)} to Municipio
+    Licenca{estado(nome)} to Estado
+
+	MarcadorTemplate{categoriaTemplate} to CategoriaTemplate
+    
+    MovimentacaoProduto{produto(nome)} to Produto
+
+	Municipio{estado(nome)} to Estado
+  
+  	NotaFiscal{projeto(nome)} to Projeto
+  	NotaFiscal{empresa} to Empresa // francisco: adicionado
+  	NotaFiscal{vendedor} to Pessoa // alterado conforme codigo, ates era Cooperado
+
+	Orcamento{responsavel(nome)} to Pessoa
+
+	OrcamentoProduto{produto(nome)} to Produto
+    OrcamentoProduto{orcamento(titulo)} to Orcamento
+
+    Patrimonio{empresa(nome)} to Empresa 
+    
+    PermissaoUsuario{pessoa(nome)} to Pessoa    
+    PermissaoUsuario{empresa(nome)} to Empresa
+    
+    Pessoa{empresa(nome)} to Empresa
+    
+    Produto{familia(nome)} to FamiliaProduto	
+	Produto{categoria(nome)} to CategoriaProduto
+	Produto{empresa(nome)} to Empresa
+    Produto{produtoSistema} to ProdutoSistema
+    
+    ProdutoSistema{categoria(nome)} to CategoriaProduto
+    
+    Projeto{empresa(nome)} to Empresa //adicionado conforme codigo
+    Projeto{contaBancaria(conta)} to ContaBancaria //adicionado conforme codigo
+    
+    Reuniao{atas} to Ata
+   	Reuniao{empresa(nome)} to Empresa
+    
+    Saida{categoria(nome)} to CentroCusto    
+    Saida{conta(conta)} to ContaBancaria
+    Saida{compraProdutos} to CompraProdutos
+    Saida{compraServico} to CompraServico
+    
+    Servico{empresa(nome)} to Empresa 
+    
+    Template{empresa(nome)} to Empresa
+    
+    TemplateAta{categoria(nome)} to CategoriaTemplate
+    TemplateAta{empresa(nome)} to Empresa  
+    
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+
+	// francisco adicionou relacionamentos para Atividade
+    Atividade{entrada(nome)} to Entrada{atividade(nome)} 
+    Atividade{saida(nome)} to Saida{atividade(nome)} 
+    Atividade{orcamento} to Orcamento{atividade(nome)} 
+    Atividade{arquivos(nome)} to ArquivoAnexo{atividade(nome)}
+    Atividade{links(nome)} to LinkAnexo{atividade(nome)}
+    Atividade{videos(nome)} to VideoAnexo{atividade(nome)}
+    
+    Conteudo{ArquivoAnexos(nome)} to ArquivoAnexo{conteudo(titulo)}
+    Conteudo{linksAnexos(nome)} to LinkAnexo{conteudo(titulo)}
+    Conteudo{videosAnexos(nome)} to VideoAnexo{conteudo(titulo)}
+    
+    Cooperado{anexos(nome)} to ArquivoAnexo{cooperadoAnexo}
+    
+    Empresa{empresaCompraProdutos} to CompraProdutos{empresa(nome)}
+    Empresa{fornecedorFornecedorProdutos} to CompraProdutos{fornecedor(nome)}
+	Empresa{empresaCompraServicos} to CompraServico{empresa(nome)}
+	Empresa{fornecedorCompraServicos} to CompraServico{fornecedor(nome)}
+	Empresa{contratosCliente} to ContratoServico{cliente(nome)}
+    Empresa{contratosFornecedor} to ContratoServico{fornecedor(nome)}
+	Empresa{anexos(nome)} to ArquivoAnexo{empresaAnexo(nome)} 
+    Empresa{linksAnexos(nome)} to LinkAnexo{empresa(nome)} 
+    Empresa{videos(nome)} to VideoAnexo{empresaAnexo(nome)} 
+	Empresa{produtosFornecedorPrincipal} to Produto{fornecedorPrincipal}
+    Empresa{produtosClientePrincipal} to Produto{clientePrincipal}
+	Empresa{entradasEmpresa(nome)} to Entrada{empresa}
+    Empresa{entradasOrigem(nome)} to Entrada{origem}
+	Empresa{orcamentosFornecedor} to Orcamento{fornecedor(nome)}
+    Empresa{orcamentosSolicitante} to Orcamento{solicitante(nome)}
+	Empresa{empresas(nome)} to Saida{empresa(nome)}
+    Empresa{empresasDestino(nome)} to Saida{destino(nome)}
+	Empresa{funcionarios} to Funcionario{empresa(nome)}
+    
+    Funcionario{anexos(nome)} to ArquivoAnexo{funcionarioAnexo}
+    
+    Imposto{arquivos(nome)} to ArquivoAnexo{imposto(nome)}
+    Imposto{links(nome)} to LinkAnexo{imposto(nome)}
+    Imposto{videos(nome)} to VideoAnexo{imposto(nome)}
+    
+    InstanciaImpostoNaEmpresa{anexos(nome)} to ArquivoAnexo{instanciaImposto}
+    InstanciaImpostoNaEmpresa{saidas(nome)} to Saida{instanciaImpostoNaEmpresa} // adicionado francisco
+    Patrimonio{arquivos(nome)} to ArquivoAnexo{patrimonio(nome)}
+    
+    Pessoa{movimentacoesAutorizador} to MovimentacaoProduto{autorizador(nome)}
+    Pessoa{movimentacoesResponsavel} to MovimentacaoProduto{responsavel(nome)}
+    Pessoa{funcionarios} to Funcionario{pessoa} //cascade em funcionário, antes era OneToOne
+    Pessoa{cooperados} to Cooperado{pessoa} // alterado conforme o codigo. Antes era OneToOne
+    
+    Projeto{entradas(nome)} to Entrada{projeto(nome)}
+    Projeto{saidas(nome)} to Saida{projeto(nome)}
+    Projeto{atividades(nome)} to Atividade{projeto(nome)}
+    
+    Template{arquivos(nome)} to ArquivoAnexo{template(nome)}
+  	Template{links(nome)} to LinkAnexo{template(nome)}
+    Template{videos(nome)} to VideoAnexo{template(nome)}
+  
+    
+   // removido Empresa{servicos(nome)} to Servico{empresa(nome)} nao existe no codigo
+    
+}
+
+// Set pagination options
+paginate * with pagination
+dto * with mapstruct
+service all with serviceImpl
+filter * 
+
